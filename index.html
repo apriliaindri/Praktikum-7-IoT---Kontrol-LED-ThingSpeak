@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LED ON/OFF</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 60px;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        background-color: white;
+        display: inline-block;
+        padding: 35px 45px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        font-size: 32px;
+        margin-bottom: 35px;
+      }
+
+      p {
+        font-size: 25px;
+        margin: 25px 0;
+      }
+
+      a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #333;
+        transition: 0.2s;
+      }
+
+      a:hover {
+        opacity: 0.7;
+      }
+
+      .on {
+        color: #16a34a;
+      }
+
+      .off {
+        color: #dc2626;
+      }
+
+      .separator {
+        color: #777;
+        margin: 0 8px;
+      }
+
+      .status {
+        color: #999;
+        font-size: 18px;
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Kontrol LED</h1>
+
+      <p>
+        <b>LED 1 - Hijau</b>
+        &nbsp;
+        <a
+          href="#"
+          class="on"
+          onclick="
+            updateLED(1, 1);
+            return false;
+          "
+        >
+          ON
+        </a>
+        <span class="separator">/</span>
+        <a
+          href="#"
+          class="off"
+          onclick="
+            updateLED(1, 0);
+            return false;
+          "
+        >
+          OFF
+        </a>
+      </p>
+
+      <div id="status1" class="status">Status: Belum Dipilih</div>
+
+      <p>
+        <b>LED 2 - Merah</b>
+        &nbsp;
+        <a
+          href="#"
+          class="on"
+          onclick="
+            updateLED(2, 1);
+            return false;
+          "
+        >
+          ON
+        </a>
+        <span class="separator">/</span>
+        <a
+          href="#"
+          class="off"
+          onclick="
+            updateLED(2, 0);
+            return false;
+          "
+        >
+          OFF
+        </a>
+      </p>
+
+      <div id="status2" class="status">Status: Belum Dipilih</div>
+    </div>
+
+    <script>
+      const apiKey = "LMLYYJ0WV81E8HNC";
+
+      function updateLED(field, value) {
+        let url =
+          "https://api.thingspeak.com/update?api_key=" +
+          apiKey +
+          "&field" +
+          field +
+          "=" +
+          value;
+
+        fetch(url, {
+          mode: "no-cors",
+        });
+
+        let statusText = value === 1 ? "Status: ON" : "Status: OFF";
+        let statusElement = document.getElementById("status" + field);
+
+        statusElement.textContent = statusText;
+
+        if (value === 1) {
+          statusElement.style.color = "#16a34a";
+        } else {
+          statusElement.style.color = "#dc2626";
+        }
+      }
+    </script>
+  </body>
+</html>
