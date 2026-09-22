@@ -3,97 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LED ON/OFF</title>
-
+    <title>Panel Kontrol LED</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 60px;
-            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
 
         .container {
             background-color: white;
-            display: inline-block;
-            padding: 35px 45px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
         h1 {
-            font-size: 32px;
-            margin-bottom: 35px;
+            color: #333;
+            margin-bottom: 30px;
         }
 
-        p {
-            font-size: 25px;
-            margin: 25px 0;
-        }
-
-        a {
-            text-decoration: none;
+        .kontrol-grup {
+            margin-bottom: 25px;
+            font-size: 1.5rem;
             font-weight: bold;
+            color: #555;
         }
 
-        .on {
-            color: #16a34a;
+        /* Gaya Tombol Dasar */
+        .btn {
+            display: inline-block;
+            padding: 10px 25px;
+            margin: 0 5px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            color: #000; /* Warna teks default hitam */
+            background-color: #e0e0e0; /* Warna abu-abu netral */
+            transition: all 0.2s ease;
+            border: 2px solid #ccc;
         }
 
-        .off {
-            color: #dc2626;
+        /* Kelas Aktif untuk LED 1 */
+        .active-on-1 {
+            background-color: #4CAF50 !important; /* Hijau */
+            color: white !important;
+            border-color: #388E3C;
         }
 
-        .separator {
-            color: #777;
-            margin: 0 8px;
+        .active-off-1 {
+            background-color: #F44336 !important; /* Merah */
+            color: white !important;
+            border-color: #D32F2F;
+        }
+
+        /* Kelas Aktif untuk LED 2 */
+        .active-on-2 {
+            background-color: #4CAF50 !important; /* Hijau */
+            color: white !important;
+            border-color: #388E3C;
+        }
+
+        .active-off-2 {
+            background-color: #F44336 !important; /* Merah */
+            color: white !important;
+            border-color: #D32F2F;
         }
     </style>
 </head>
-
 <body>
 
-    <div class="container">
+<div class="container">
+    <h1>Panel Kontrol LED ThingSpeak</h1>
 
-        <h1>Kontrol LED</h1>
-
-        <p>
-            <b>LED 1 - Hijau</b>
-            &nbsp;
-            <a
-                href="https://api.thingspeak.com/update?api_key=LMLYYJ0WV81E8HNC&field1=1"
-                class="on">
-                ON
-            </a>
-
-            <span class="separator">/</span>
-
-            <a
-                href="https://api.thingspeak.com/update?api_key=LMLYYJ0WV81E8HNC&field1=0"
-                class="off">
-                OFF
-            </a>
-        </p>
-
-        <p>
-            <b>LED 2 - Merah</b>
-            &nbsp;
-            <a
-                href="https://api.thingspeak.com/update?api_key=LMLYYJ0WV81E8HNC&field2=1"
-                class="on">
-                ON
-            </a>
-
-            <span class="separator">/</span>
-
-            <a
-                href="https://api.thingspeak.com/update?api_key=LMLYYJ0WV81E8HNC&field2=0"
-                class="off">
-                OFF
-            </a>
-        </p>
-
+    <!-- Kontrol LED 1 -->
+    <div class="kontrol-grup">
+        <span style="display:inline-block; width:120px; text-align:right; margin-right:15px;">LED 1 :</span>
+        <a href="https://api.thingspeak.com/update?api_key=4Y8FZ1HF2TJBLVQ2&field1=1" onclick="setLED(1, 'on')" id="btn1_on" class="btn">ON</a>
+        / 
+        <a href="https://api.thingspeak.com/update?api_key=4Y8FZ1HF2TJBLVQ2&field1=0" onclick="setLED(1, 'off')" id="btn1_off" class="btn">OFF</a>
     </div>
+
+    <!-- Kontrol LED 2 -->
+    <div class="kontrol-grup">
+        <span style="display:inline-block; width:120px; text-align:right; margin-right:15px;">LED 2 :</span>
+        <a href="https://api.thingspeak.com/update?api_key=4Y8FZ1HF2TJBLVQ2&field2=1" onclick="setLED(2, 'on')" id="btn2_on" class="btn">ON</a>
+        / 
+        <a href="https://api.thingspeak.com/update?api_key=4Y8FZ1HF2TJBLVQ2&field2=0" onclick="setLED(2, 'off')" id="btn2_off" class="btn">OFF</a>
+    </div>
+
+</div>
+
+<script>
+    // Fungsi untuk menyimpan status warna tombol ke memori browser (localStorage)
+    function setLED(ledNum, status) {
+        localStorage.setItem('led' + ledNum, status);
+    }
+
+    // Fungsi untuk membaca status saat halaman dimuat ulang (termasuk saat Anda klik Back)
+    window.onload = function() {
+        for (let i = 1; i <= 2; i++) {
+            let status = localStorage.getItem('led' + i);
+            if (status === 'on') {
+                document.getElementById('btn' + i + '_on').classList.add('active-on-' + i);
+                document.getElementById('btn' + i + '_off').classList.remove('active-off-' + i);
+            } else if (status === 'off') {
+                document.getElementById('btn' + i + '_off').classList.add('active-off-' + i);
+                document.getElementById('btn' + i + '_on').classList.remove('active-on-' + i);
+            }
+        }
+    }
+</script>
 
 </body>
 </html>
